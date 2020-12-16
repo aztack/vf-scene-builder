@@ -21,7 +21,7 @@ Game('myFirstVFProject', '1.0.0')
 
 will output
 
-```json
+```js
 {
   name: 'myFirstVFProject',
   version: '1.0.0',

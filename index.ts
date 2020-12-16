@@ -1,3 +1,6 @@
+const util = require('util');
+const fs = require('fs');
+
 export type IGame = {
   name: string,
   version: string,
@@ -23,18 +26,19 @@ type Coordinate = {x: number, y: number};
 
 export class VfBuilder {
   $game: IGame = {name: '', version: '', baseUrl: '', width: 0, height: 0}
-  $canvas = {}
   $assets = {}
-  $scenes = []
+  $scenes: any[] = []
   $components = {}
-  _$ctn = null
-  _$!: any
 
-  red: "#f00"
-  green: "#0f0"
-  blue: "#00f"
-  white: "#fff"
-  black: "#000"
+  // internal use only
+  _$ctn: any = null
+  _$: any
+
+  red = "#f00"
+  green = "#0f0"
+  blue = "#00f"
+  white = "#fff"
+  black = "#000"
 
   _$push(id: string): this {
     if (Array.isArray(this._$ctn)) {
@@ -60,10 +64,10 @@ export class VfBuilder {
     this.$game.baseUrl = url;
     return this;
   }
-  /*attribute*/ center(): Coordinate {
+  /*attribute*/ get center(): Coordinate {
     return {x: this.$game.width / 2, y: this.$game.height / 2};
   }
-  Asset(): this {
+  Assets(): this {
     this._$ctn = this.$assets;
     return this;
   }
@@ -98,7 +102,6 @@ export class VfBuilder {
     return this;
   }
 
-  // common methods
   /*attribute*/ url(url: string): this {
     this._$.url = url;
     return this;
@@ -130,6 +133,13 @@ export class VfBuilder {
   }
 }
 
-export default function create() {
+export function create() {
   return new VfBuilder()
+}
+
+export function requireScene(path: string) {
+  const code = fs.readFileSync(path).toString().trim().replace('function () {', '').replace(/\}\s*;?\s*$/g, '');
+  const fn = new Function ('builder', `with (builder) {${code}};return builder.toJson()`)
+  const project = fn(create());
+  return util.inspect(project, false, 5);
 }

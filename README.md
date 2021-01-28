@@ -1,7 +1,7 @@
 A [VF](https://vipkid-edu.github.io/vf-docs/) Scene Builder
 ===
 
-Build VF Scene Json with builder pattern and code suggestions.
+This is an concept-prove project which build VF Scene Json with builder pattern and code suggestions.
 
 Example:
 
